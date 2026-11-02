@@ -1,0 +1,22 @@
+name: e2e
+on: [push, pull_request]
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm install
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
+        env:
+          # Repository secrets. A free session ends after 60 minutes without use, so for CI use a permanent
+          # inbox (https://emailblackhole.io/docs/limits) and store its values here.
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          EBH_URL: ${{ secrets.EBH_URL }}
+          EBH_ID: ${{ secrets.EBH_ID }}
+          EBH_SECRET: ${{ secrets.EBH_SECRET }}

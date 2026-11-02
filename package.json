@@ -1,0 +1,23 @@
+{
+  "name": "emailblackhole-playwright-starter",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright starter: test the email your app sends (password reset, sign-up confirmation, magic link) with Email Blackhole. No signup, no API key.",
+  "type": "module",
+  "license": "MIT",
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "setup": "playwright install chromium",
+    "start": "node app/server.mjs",
+    "test": "playwright test",
+    "demo": "playwright test --headed"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.16"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0",
+    "dotenv": "^16.4.5",
+    "emailblackhole": "^0.1.0"
+  }
+}
