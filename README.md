@@ -41,7 +41,7 @@ A free session ends after 60 minutes without use; copy a fresh `.env` block when
    const link = extractLink(message)                    // or message.codes[0] for a one-time code
    ```
 
-**Local versus CI:** a free session is for your machine; when it expires (60 minutes without use) copy a fresh `.env` block. CI cannot create a session (it needs a browser), so the workflow in `.github/workflows/e2e.yml` needs a **permanent inbox** (paid plan) whose values you store as repository secrets. Without those secrets the CI run fails; that is expected on a fresh fork. More: [Playwright guide](https://emailblackhole.io/docs/playwright), [password-reset testing](https://emailblackhole.io/docs/test-password-reset), [guide for AI coding agents](https://emailblackhole.io/docs/ai-agents), and the [Cypress starter](https://github.com/nbs-applications/emailblackhole-cypress-starter).
+**Local versus CI:** a free session is for your machine; when it expires (60 minutes without use) copy a fresh `.env` block. CI cannot create a session (it needs a browser), so the workflow in `.github/workflows/e2e.yml` needs a **permanent inbox** (paid plan) whose values you store as repository secrets. Without those secrets the CI job skips the e-mail test and passes with a notice. More: [Playwright guide](https://emailblackhole.io/docs/playwright), [password-reset testing](https://emailblackhole.io/docs/test-password-reset), [guide for AI coding agents](https://emailblackhole.io/docs/ai-agents), and the [Cypress starter](https://github.com/nbs-applications/emailblackhole-cypress-starter).
 
 ## Notes
 

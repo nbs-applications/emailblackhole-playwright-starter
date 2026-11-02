@@ -5,14 +5,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with: { node-version: 22 }
-      - run: npm install
-      - run: npx playwright install --with-deps chromium
-      - run: npm test
+      # A pipeline cannot create an Email Blackhole inbox (that needs a browser) and a free session expires,
+      # so the test runs only when a permanent inbox is stored as repository secrets. Without them (a fresh
+      # fork, for example) the job passes and says so.
+      - name: Check for inbox secrets
+        id: inbox
         env:
-          # Repository secrets. A free session ends after 60 minutes without use, so for CI use a permanent
-          # inbox (https://emailblackhole.io/docs/limits) and store its values here.
+          EBH_SECRET: ${{ secrets.EBH_SECRET }}
+        run: |
+          if [ -n "$EBH_SECRET" ]; then
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=E-mail test skipped::No EBH_* secrets set. CI needs a permanent inbox: https://emailblackhole.io/docs/ci"
+          fi
+      - uses: actions/setup-node@v4
+        if: steps.inbox.outputs.ready == 'true'
+        with: { node-version: 22 }
+      - if: steps.inbox.outputs.ready == 'true'
+        run: npm install
+      - if: steps.inbox.outputs.ready == 'true'
+        run: npx playwright install --with-deps chromium
+      - if: steps.inbox.outputs.ready == 'true'
+        run: npm test
+        env:
+          # Repository secrets: the values of a permanent inbox (https://emailblackhole.io/docs/limits).
           SMTP_HOST: ${{ secrets.SMTP_HOST }}
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
